@@ -1,6 +1,6 @@
-# Go UDP Service
+# Go TCP Service
 
-This sample shows how you can deploy server-client services utilizing UDP for communication. The setup underscores the utilization of lightweight, connectionless data exchange between these components within a networked context.
+This sample demonstrates how you can deploy server-client services utilizing TCP for communication. The setup emphasizes the use of a reliable, connection-oriented data exchange between these components within a networked context.
 
 ## Steps to Deploy in Choreo
 
@@ -8,8 +8,8 @@ This sample shows how you can deploy server-client services utilizing UDP for co
 
 1. Create a new Service component with following parameters
    - Build Pack: `Dockerfile`
-   - Dockerfile path: `docker-udp-service/Dockerfile.server`
-   - Build Context: `docker-udp-service`
+   - Dockerfile path: `docker-tcp-service/Dockerfile.server`
+   - Build Context: `docker-tcp-service`
 2. Deploy the component
 3. Navigate to the **Overview** page of the component and copy the endpoint address with the Project visibility.
 
@@ -17,16 +17,16 @@ This sample shows how you can deploy server-client services utilizing UDP for co
 
 1. Create a new Manual Trigger component with following parameters
    - Build Pack: `Dockerfile`
-   - Dockerfile path: `docker-udp-service/Dockerfile.client`
-   - Build Context: `docker-udp-service`
+   - Dockerfile path: `docker-tcp-service/Dockerfile.client`
+   - Build Context: `docker-tcp-service`
 2. Navigate to the **Configs & Secrets** page of the component and add the following environment variables as the `ConfigMap` with a custom config name.
 
    - `SERVER_ADDRESS`: `<server-address>`
 
    Use the address copied from the server component (Step 3) as the value for `SERVER_ADDRESS` environment variable.
-   Example: udp-server-3192360657:5000
+   Example: tcp-server-3192360657:8080
 
-3. Deploy the component and run it by clicking the **Run Once** button.
+3. Deploy the component.
 
 Refer https://wso2.com/choreo/docs/devops-and-ci-cd/manage-configurations-and-secrets/ for more information on how to add configs and secrets to a component.
 
@@ -39,7 +39,7 @@ Refer https://wso2.com/choreo/docs/devops-and-ci-cd/manage-configurations-and-se
 2. Start the client
 
    ```
-   SERVER_ADDRESS=localhost:5050 go run ./client
+   SERVER_ADDRESS=localhost:8080 go run ./client
    ```
 
 Refer https://wso2.com/choreo/docs/develop-components/develop-services/develop-a-service/ for more information on how to develop and deploy a service component.
