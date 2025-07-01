@@ -23,6 +23,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"os/signal"
@@ -31,6 +32,8 @@ import (
 )
 
 func main() {
+	// Start periodic logging in background
+	go startPeriodicLogging()
 
 	serverMux := http.NewServeMux()
 	serverMux.HandleFunc("/greeter/greet", greet)
@@ -67,5 +70,45 @@ func greet(w http.ResponseWriter, r *http.Request) {
 	if name == "" {
 		name = "Stranger"
 	}
+	log.Printf("INFO: Greeting request received for name: %s from %s", name, r.RemoteAddr)
 	fmt.Fprintf(w, "Hello, %s!\n", name)
+}
+
+func startPeriodicLogging() {
+	ticker := time.NewTicker(30 * time.Second)
+	defer ticker.Stop()
+
+	requestCount := 0
+	systemErrors := []string{
+		"database connection timeout",
+		"memory usage high",
+		"disk space low",
+		"network latency spike",
+		"cache miss rate elevated",
+	}
+
+	for {
+		select {
+		case <-ticker.C:
+			requestCount++
+			
+			// Generate different types of logs
+			switch requestCount % 4 {
+			case 0:
+				log.Printf("DEBUG: Periodic health check - uptime: %s, goroutines: %d", 
+					time.Since(time.Now().Add(-time.Duration(requestCount*30)*time.Second)), 
+					rand.Intn(50)+10)
+			case 1:
+				log.Printf("INFO: System metrics - requests processed: %d, memory usage: %d%%", 
+					requestCount*rand.Intn(100)+50, rand.Intn(30)+60)
+			case 2:
+				log.Printf("WARN: Performance alert - response time: %dms (threshold: 500ms)", 
+					rand.Intn(400)+600)
+			case 3:
+				errorType := systemErrors[rand.Intn(len(systemErrors))]
+				log.Printf("ERROR: System issue detected - %s (correlation_id: %d)", 
+					errorType, rand.Intn(10000)+1000)
+			}
+		}
+	}
 }
