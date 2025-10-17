@@ -59,7 +59,7 @@ paths:
       summary: Get reading list book by id
       security:
         - default:
-            - read:books 
+            - read:book
       parameters:
       - name: id
         in: path
